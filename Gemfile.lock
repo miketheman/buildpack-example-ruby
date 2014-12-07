@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    dogstatsd-ruby (1.4.1)
     dotenv (1.0.2)
     foreman (0.76.0)
       dotenv (~> 1.0.2)
@@ -21,6 +22,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  dogstatsd-ruby
   foreman
   puma
   sinatra

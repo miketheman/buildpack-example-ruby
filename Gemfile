@@ -8,3 +8,6 @@ gem 'sinatra'
 
 # Runner
 gem 'foreman'
+
+# Metrics!
+gem 'dogstatsd-ruby'
