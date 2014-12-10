@@ -1,1 +1,1 @@
-web: foreman start -f Procfile.internal
+web: rackup -s puma -p $PORT
