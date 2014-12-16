@@ -1,2 +1,0 @@
-web: rackup -s puma -p $PORT
-dogstatsd: ./run-dogstatsd.sh

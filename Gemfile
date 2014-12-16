@@ -7,7 +7,9 @@ gem 'puma'
 gem 'sinatra'
 
 # Runner
-gem 'foreman'
+group :development do
+  gem 'foreman'
+end
 
 # Metrics!
 gem 'dogstatsd-ruby'
