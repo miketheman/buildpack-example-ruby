@@ -176,112 +176,11 @@ This is an example application for using the
 
     The warnings are due to the way apt-get handles being installed into a restricted environment where we cannot modify the accepting keys.
 
-4. Add foreman to project, change how process is launched
-
-    [This commit](https://github.com/miketheman/buildpack-example-ruby/commit/fb78b9ba6609f95d827aff9495904095ee7b795c) adds the foreman gem, an internal Procfile to launch the web worker and dogstatsd together.
-
-    ```console
-    $ git push heroku master
-    Counting objects: 7, done.
-    Delta compression using up to 4 threads.
-    Compressing objects: 100% (6/6), done.
-    Writing objects: 100% (7/7), 929 bytes | 0 bytes/s, done.
-    Total 7 (delta 2), reused 0 (delta 0)
-    remote: Compressing source files... done.
-    remote: Building source:
-    remote:
-    remote: -----> Fetching custom git buildpack... done
-    remote: -----> Multipack app detected
-    remote: =====> Downloading Buildpack: https://github.com/miketheman/heroku-buildpack-datadog.git
-    remote: =====> Detected Framework: Heroku Datadog Buildpack
-    remote: -----> Updating apt caches
-    remote:        Ign http://apt.datadoghq.com stable InRelease
-    remote:        Get:1 http://apt.datadoghq.com stable Release.gpg [473 B]
-    remote:        Hit http://apt.datadoghq.com stable Release
-    remote:        Ign http://apt.datadoghq.com stable Release
-    remote:        Ign http://apt.datadoghq.com stable/main amd64 Packages/DiffIndex
-    remote:        Hit http://apt.datadoghq.com stable/main amd64 Packages
-    remote:        Ign http://apt.datadoghq.com stable/main Translation-en_US
-    remote:        Ign http://apt.datadoghq.com stable/main Translation-en
-    remote:        Fetched 473 B in 0s (1,192 B/s)
-    remote:        Reading package lists...
-    remote: W: GPG error: http://apt.datadoghq.com stable Release: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 226AE980C7A7DA52
-    remote: -----> Fetching datadog-agent
-    remote:        Reading package lists...
-    remote:        Building dependency tree...
-    remote:        The following NEW packages will be installed:
-    remote:          datadog-agent
-    remote:        0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
-    remote:        Need to get 0 B/49.6 MB of archives.
-    remote:        After this operation, 164 MB of additional disk space will be used.
-    remote:        WARNING: The following packages cannot be authenticated!
-    remote:          datadog-agent
-    remote:        Download complete and in download only mode
-    remote: -----> Fetching deb packages
-    remote: -----> Installing datadog-agent_1%3a5.1.0-539_amd64.deb
-    remote: -----> Datadog Agent package installed
-    remote: =====> Downloading Buildpack: https://github.com/heroku/heroku-buildpack-ruby
-    remote: =====> Detected Framework: Ruby
-    remote: -----> Compiling Ruby/Rack
-    remote: -----> Using Ruby version: ruby-2.1.5
-    remote: -----> Installing dependencies using 1.6.3
-    remote:        Running: bundle install --without development:test --path vendor/bundle --binstubs vendor/bundle/bin -j4 --deployment
-    remote:        Fetching gem metadata from https://rubygems.org/..........
-    remote:        Using rack 1.5.2
-    remote:        Using tilt 1.4.1
-    remote:        Using bundler 1.6.3
-    remote:        Using puma 2.10.2
-    remote:        Using rack-protection 1.5.3
-    remote:        Using sinatra 1.4.5
-    remote:        Installing dotenv 1.0.2
-    remote:        Installing thor 0.19.1
-    remote:        Installing foreman 0.76.0
-    remote:        Your bundle is complete!
-    remote:        Gems in the groups development and test were not installed.
-    remote:        It was installed into ./vendor/bundle
-    remote:        Bundle completed (4.17s)
-    remote:        Cleaning up the bundler cache.
-    remote:
-    remote: Using release configuration from last framework (Ruby).
-    remote: -----> Discovering process types
-    remote:        Procfile declares types     -> web
-    remote:        Default types for Multipack -> console, rake
-    remote:
-    remote: -----> Compressing... done, 64.4MB
-    remote: -----> Launching... done, v10
-    remote:        https://blooming-peak-9226.herokuapp.com/ deployed to Heroku
-    remote:
-    remote: Verifying deploy... done.
-    To https://git.heroku.com/blooming-peak-9226.git
-    + 7d7eed8...fb78b9b master -> master
-    ```
-
-    And the output from `heroku logs`:
-
-    ```console
-    2014-12-07T16:17:33.492472+00:00 heroku[api]: Deploy fb78b9b by miketheman@gmail.com
-    2014-12-07T16:17:33.492500+00:00 heroku[api]: Release v10 created by miketheman@gmail.com
-    2014-12-07T16:17:33.812239+00:00 heroku[web.1]: State changed from up to starting
-    2014-12-07T16:17:36.848823+00:00 heroku[web.1]: Stopping all processes with SIGTERM
-    2014-12-07T16:17:38.588602+00:00 heroku[web.1]: Process exited with status 143
-    2014-12-07T16:17:39.860449+00:00 heroku[web.1]: Starting process with command `foreman start -f Procfile.internal`
-    2014-12-07T16:17:40.876288+00:00 app[web.1]: 16:17:40 dogstatsd.1 | started with pid 5
-    2014-12-07T16:17:40.875982+00:00 app[web.1]: 16:17:40 web.1       | started with pid 4
-    2014-12-07T16:17:41.256061+00:00 app[web.1]: 16:17:41 web.1       | * Min threads: 0, max threads: 16
-    2014-12-07T16:17:41.256278+00:00 app[web.1]: 16:17:41 web.1       | * Environment: production
-    2014-12-07T16:17:41.433553+00:00 app[web.1]: 16:17:41 dogstatsd.1 | Log file is unwritable: '/var/log/datadog/dogstatsd.log'
-    2014-12-07T16:17:41.255926+00:00 app[web.1]: 16:17:41 web.1       | Puma 2.10.2 starting...
-    2014-12-07T16:17:41.256583+00:00 app[web.1]: 16:17:41 web.1       | * Listening on tcp://0.0.0.0:17131
-    2014-12-07T16:17:41.462462+00:00 app[web.1]: 16:17:41 dogstatsd.1 | 2014-12-07 16:17:41,461 | INFO | dd.dogstatsd | dogstatsd(dogstatsd.py:105) | Reporting to app.datadoghq.com every 10s
-    2014-12-07T16:17:41.462385+00:00 app[web.1]: 16:17:41 dogstatsd.1 | 2014-12-07 16:17:41,461 | INFO | dd.dogstatsd | dogstatsd(dogstatsd.py:274) | Listening on host & port: ('localhost', 8125)
-    2014-12-07T16:17:41.895369+00:00 heroku[web.1]: State changed from starting to up
-    ```
-
-5. Add metrics reporting to the application
+4. Add metrics reporting to the application
 
     [This commit](https://github.com/miketheman/buildpack-example-ruby/commit/1e8aa646a781f94576d40f67e4285f6a011d9b91) shows the addition of actually making a statsd callout, along with tags, so I can feasibly reuse the
     metric name `page.views` if it makes sense to aggregate all page views across all apps (tagged by default as "hosts") as well as by dyno ID, in case you're looking to spot variance of dyno performance in comparison.
 
-6. Profit!
+5. Profit!
 
     ![Heroku page.views](http://cl.ly/image/01040Z2Z0j2c/page.views%20on%20heroku.png)
