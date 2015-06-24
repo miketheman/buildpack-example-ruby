@@ -11,6 +11,6 @@ $dyno_id ||= ENV['DYNO']
 class App < Sinatra::Base
   get('/') do
     $statsd.increment('page.views', tags: ['app:example-app', "dyno_id:#{$dyno_id}"])
-    "<center><h1>Welcome! The time now is: #{Time.now}"
+    "<center><h1>Welcome! The time now is: #{Time.now}</h1></center>"
   end
 end
