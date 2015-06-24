@@ -184,3 +184,11 @@ This is an example application for using the
 5. Profit!
 
     ![Heroku page.views](http://cl.ly/image/01040Z2Z0j2c/page.views%20on%20heroku.png)
+
+---
+
+# Known issues
+
+Redeploying may have unintended consequences as different Agent versions may deploy files in new manners without clearing old ones.
+YMMV.
+
